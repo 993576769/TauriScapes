@@ -1,13 +1,10 @@
-html.dark {
-  color-scheme: dark;
-}
-
 html,
 body {
   height: 100%;
   padding: 0;
   margin: 0;
   font-family: Inter, sans-serif;
+  background: transparent;
 }
 
 #app {
@@ -15,3 +12,6 @@ body {
   font-size: 16px;
 }
 
+html::-webkit-scrollbar {
+  display: none;
+}

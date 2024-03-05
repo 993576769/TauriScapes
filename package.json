@@ -5,7 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "tauri:dev": "tauri dev",
     "build": "vue-tsc && vite build",
+    "tauri:build": "tauri build",
     "preview": "vite preview",
     "lint": "eslint .",
     "lint:ts": "vue-tsc"
@@ -13,8 +15,12 @@
   "dependencies": {
     "@tauri-apps/api": "^1.5.3",
     "@vueuse/core": "^10.8.0",
+    "axios": "^1.6.7",
+    "axios-tauri-api-adapter": "^0.2.1",
     "class-variance-authority": "^0.7.0",
     "date-fns": "^3.3.1",
+    "lodash-es": "^4.17.21",
+    "qs": "^6.11.2",
     "tailwind-merge": "^2.2.1",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0"
@@ -23,7 +29,10 @@
     "@antfu/eslint-config": "^0.35.3",
     "@tailwindcss/forms": "^0.5.7",
     "@tailwindcss/typography": "^0.5.10",
+    "@tauri-apps/cli": "^1.5.10",
+    "@types/lodash-es": "^4.17.12",
     "@types/node": "^20.11.20",
+    "@types/qs": "^6.9.12",
     "@vitejs/plugin-react": "^4.2.1",
     "@vitejs/plugin-vue": "^5.0.4",
     "@vue/compiler-sfc": "^3.4.19",

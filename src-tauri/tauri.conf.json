@@ -4,19 +4,24 @@
     "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:5173",
     "distDir": "../dist",
-    "withGlobalTauri": true
+    "withGlobalTauri": false
   },
   "package": {
     "productName": "unsplash",
-    "version": "0.0.0"
+    "version": "0.0.1"
   },
   "tauri": {
-    "systemTray": {
-      "iconPath": "icons/icon.png",
-      "iconAsTemplate": true
-    },
     "allowlist": {
-      "all": true
+      "all": false,
+      "shell": {
+        "all": false,
+        "open": true
+      },
+      "http": {
+        "all": true,
+        "request": true,
+        "scope": ["https://source.unsplash.com/*", "https://api.unsplash.com/*"]
+      }
     },
     "bundle": {
       "active": true,
@@ -57,14 +62,27 @@
     "updater": {
       "active": false
     },
+    "macOSPrivateApi": true,
     "windows": [
       {
         "fullscreen": false,
-        "height": 700,
+        "height": 400,
         "resizable": false,
-        "title": "unsplash",
-        "width": 500
+        "title": "menubar",
+        "width": 500,
+        "hiddenTitle": true,
+        "decorations": false,
+        "focus": true,
+        "transparent": true,
+        "skipTaskbar": true,
+        "alwaysOnTop": true,
+        "visible": false
       }
-    ]
+    ],
+    "systemTray": {
+      "iconPath": "icons/icon.png",
+      "iconAsTemplate": true,
+      "menuOnLeftClick": false
+    }
   }
 }

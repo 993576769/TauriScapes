@@ -1,35 +1,56 @@
 <script lang="ts" setup>
-import { onMounted, ref, onBeforeMount } from 'vue';
+import { onMounted, ref } from 'vue';
 import { invoke } from '@tauri-apps/api';
-import { listen } from '@tauri-apps/api/event';
-import { useDark, useToggle } from '@vueuse/core';
+// import { listen } from '@tauri-apps/api/event';
+import type { Image } from '@/models/image';
+import Icon from '@/components/icon.vue';
+import { request } from '@/utils/request';
 
-const text = ref('');
-let interval: NodeJS.Timeout | null = null;
 onMounted(async () => {
-  listen('rs_js_emit', (event: any) => text.value = event);
-
-  interval = setInterval(() => {
-    invoke('interval_action', { msg: 'interval msg' }).then((s: any) => {
-      text.value = s;
-    });
-  }, 5000);
+  getPhotos();
 });
 
-onBeforeMount(() => {
-  interval && clearInterval(interval);
-});
+const image = ref<Image>();
+async function getPhotos() {
+  const { data } = await request.get<Image>('/photos/random', {
+    params: {
+      orientation: 'landscape',
+    },
+  });
+  image.value = data;
+}
 
-const isDark = useDark();
-const toggleDark = useToggle(isDark);
+async function handleSetWallpaper() {
+  try {
+    await invoke('set_wallpaper', { url: image.value?.urls?.full });
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <template>
-  <div>
-    {{ text }}
-  </div>
+  <div class="p-4 flex flex-col items-center gap-3">
+    <div class="relative h-full rounded-xl overflow-hidden">
+      <img
+        :src="image?.urls?.regular"
+        class="max-h-[300px] w-full select-none object-contain"
+      />
+      <div class="p-2 bg-black bg-opacity-50 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rounded-xl cursor-pointer" @click="getPhotos">
+        <Icon
+          name="refresh"
+          class="size-10"
+        />
+      </div>
+    </div>
 
-  <button @click="toggleDark()">
-    toggle theme {{ isDark ? ' to light' : ' to dark' }}
-  </button>
+    <button
+      class="relative inline-flex items-center justify-center p-0.5 mb-2 me-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-purple-600 to-blue-500 group-hover:from-purple-600 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800"
+      @click="handleSetWallpaper"
+    >
+      <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+        Set Wallpaper
+      </span>
+    </button>
+  </div>
 </template>

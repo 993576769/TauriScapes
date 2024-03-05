@@ -6,7 +6,7 @@ const keepAliveRouteName: string[] = [];
 </script>
 
 <template>
-  <main>
+  <main class="h-full">
     <router-view v-slot="{ Component }">
       <keep-alive :include="keepAliveRouteName">
         <component :is="Component" />
