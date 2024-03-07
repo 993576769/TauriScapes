@@ -3,6 +3,26 @@
 version = 3
 
 [[package]]
+name = "TauriScapes"
+version = "0.0.0"
+dependencies = [
+ "anyhow",
+ "chrono",
+ "dirs-next",
+ "image",
+ "reqwest",
+ "rocket",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-positioner",
+ "wallpaper",
+ "winapi",
+ "window-vibrancy",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4297,27 +4317,6 @@ name = "unicode-xid"
 version = "0.2.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f962df74c8c05a667b5ee8bcf162993134c104e96440b663c8daa176dc772d8c"
-
-[[package]]
-name = "unsplash"
-version = "0.0.0"
-dependencies = [
- "anyhow",
- "chrono",
- "dirs-next",
- "image",
- "rand 0.8.5",
- "reqwest",
- "rocket",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-positioner",
- "wallpaper",
- "winapi",
- "window-vibrancy",
-]
 
 [[package]]
 name = "url"

@@ -83,6 +83,7 @@ fn main() {
       })
       .invoke_handler(tauri::generate_handler![
         command::set_wallpaper,
+        command::save_wallpaper,
       ])
       .run(tauri::generate_context!())
       .expect("error while running tauri application");

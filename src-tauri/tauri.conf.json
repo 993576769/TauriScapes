@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "unsplash",
+    "productName": "TauriScapes",
     "version": "0.0.1"
   },
   "tauri": {
@@ -38,7 +38,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "top.lazegull.unsplash",
+      "identifier": "top.lazegull.tauriscapes",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -66,10 +66,10 @@
     "windows": [
       {
         "fullscreen": false,
-        "height": 400,
+        "height": 380,
         "resizable": false,
         "title": "menubar",
-        "width": 500,
+        "width": 400,
         "hiddenTitle": true,
         "decorations": false,
         "focus": true,

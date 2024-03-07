@@ -19,6 +19,7 @@ export interface Image {
   name?: string;
   founded?: number;
   members?: string[];
+  alt_description?: string;
 }
 
 export interface CurrentUserCollection {

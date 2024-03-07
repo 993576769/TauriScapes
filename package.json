@@ -1,5 +1,5 @@
 {
-  "name": "unsplash",
+  "name": "tauri-scapes",
   "type": "module",
   "version": "0.0.1",
   "private": true,
@@ -18,6 +18,7 @@
     "axios": "^1.6.7",
     "axios-tauri-api-adapter": "^0.2.1",
     "class-variance-authority": "^0.7.0",
+    "daisyui": "^4.7.2",
     "date-fns": "^3.3.1",
     "lodash-es": "^4.17.21",
     "qs": "^6.11.2",
