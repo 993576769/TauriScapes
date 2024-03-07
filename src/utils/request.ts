@@ -34,9 +34,6 @@ request.interceptors.response.use(
       err.code = code;
     }
     err.status = response.status;
-    if (response.status === 401) {
-      return Promise.reject(err);
-    }
     return Promise.reject(err);
   },
 );
