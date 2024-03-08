@@ -5,7 +5,7 @@
 mod command;
 
 use tauri::Manager;
-use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, ActivationPolicy};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 fn main() {
@@ -70,6 +70,8 @@ fn main() {
       })
       .setup(|app| {
         let window = app.get_window("main").unwrap();
+        // hide dock icon on macos
+        app.set_activation_policy(ActivationPolicy::Accessory);
 
         #[cfg(target_os = "macos")]
         window_vibrancy::apply_vibrancy(&window, window_vibrancy::NSVisualEffectMaterial::HudWindow, None, None)
