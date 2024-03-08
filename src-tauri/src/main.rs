@@ -23,6 +23,11 @@ fn main() {
                   ..
               } => {
                   let window = app.get_window("main").unwrap();
+
+                  #[cfg(target_os = "windows")]
+                  let _ = window.move_window(Position::Center);
+
+                  #[cfg(not(target_os = "windows"))]
                   let _ = window.move_window(Position::TrayBottomCenter);
 
                   if window.is_visible().unwrap() {
