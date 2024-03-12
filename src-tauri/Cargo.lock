@@ -8,7 +8,6 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
- "dirs-next",
  "image",
  "reqwest",
  "rocket",
@@ -17,6 +16,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-positioner",
+ "toml 0.8.10",
  "wallpaper",
  "winapi",
  "window-vibrancy",

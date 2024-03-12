@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { nextTick, onMounted, ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { invoke } from '@tauri-apps/api';
 // import { listen } from '@tauri-apps/api/event';
-import { appWindow, LogicalSize } from '@tauri-apps/api/window';
+import { useRouter } from 'vue-router';
 import type { Image } from '@/models/image';
 import { request } from '@/utils/request';
 import Icon from '@/components/icon.vue';
@@ -13,6 +13,7 @@ onMounted(async () => {
 
 const isLoading = ref(false);
 const image = ref<Image>();
+const router = useRouter();
 async function fetch() {
   try {
     isLoading.value = true;
@@ -22,11 +23,16 @@ async function fetch() {
       },
     });
     image.value = data;
-    await nextTick();
-    resizeWindow();
-  } finally {
+  } catch (err: any) {
     isLoading.value = false;
+    if (err.response.status === 401) {
+      router.push({ name: 'Settings', query: { type: '401' } });
+    }
   }
+}
+
+function onImageloaded() {
+  isLoading.value = false;
 }
 
 const isSettingWallpaper = ref(false);
@@ -44,35 +50,32 @@ async function handleSetWallpaper() {
   }
 }
 
-const container = ref();
-function resizeWindow() {
-  appWindow.setSize(new LogicalSize(container.value.clientWidth, container.value.clientHeight));
-}
-
 async function handleDownload() {
-  const res = await invoke('save_wallpaper', { url: image.value?.urls?.raw, fileName: image.value?.id });
-  console.log(res);
+  await invoke('save_wallpaper', { url: image.value?.urls?.raw, fileName: image.value?.id });
 }
 </script>
 
 <template>
-  <div ref="container" class="select-none text-gray-300">
+  <div class="select-none text-gray-300">
     <div class="relative h-full">
-      <div v-if="isLoading" class="skeleton h-[250px] w-full rounded-none"></div>
+      <div v-show="isLoading" class="skeleton h-[250px] w-full rounded-none"></div>
       <img
-        v-else
-        :src="image?.urls?.regular"
+        v-show="!isLoading"
+        :src="image?.urls?.small"
         class="h-[250px] w-full object-cover"
+        @load="onImageloaded"
       />
 
-      <button class="btn btn-square bg-opacity-70 border-none !absolute !top-1/2 !left-1/2 !transform !-translate-x-1/2 !-translate-y-1/2 select-none" @click="fetch">
-        <span v-if="isLoading" class="loading loading-spinner"></span>
-        <Icon
-          v-else
-          name="refresh"
-          class="size-6 color-white"
-        />
-      </button>
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+        <button class="btn btn-square bg-opacity-70 border-none select-none" @click="fetch">
+          <span v-if="isLoading" class="loading loading-spinner"></span>
+          <Icon
+            v-else
+            name="refresh"
+            class="size-6 color-white"
+          />
+        </button>
+      </div>
 
       <div class="absolute left-2 bottom-2 text-gray-300 text-xs">
         {{ image?.location?.name }}
@@ -94,7 +97,7 @@ async function handleDownload() {
 
       <div class="w-full inline-flex">
         <div v-if="image" class="text-xs">
-          Photo by <a :href="image?.user?.links.html" target="_blank">{{ image?.user?.name }}</a> on <a :href="image?.user?.links?.html" target="_blank">Unsplash</a>
+          Photo by <a :href="image?.user?.links.html" target="_blank">{{ image?.user?.name }}</a> on <a href="https://unsplash.com/" target="_blank">Unsplash</a>
         </div>
 
         <div class="ml-auto text-xs">

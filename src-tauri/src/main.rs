@@ -3,12 +3,15 @@
   windows_subsystem = "windows"
 )]
 mod command;
+mod config;
 
 use tauri::Manager;
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu};
 use tauri_plugin_positioner::{Position, WindowExt};
 
 fn main() {
+  config::AppConfig::create_app_folder().expect("create app folder failed!");
+
   let quit = CustomMenuItem::new("quit".to_string(), "Quit").accelerator("Cmd+Q");
   let system_tray_menu = SystemTrayMenu::new().add_item(quit);
   tauri::Builder::default()
@@ -92,6 +95,9 @@ fn main() {
       .invoke_handler(tauri::generate_handler![
         command::set_wallpaper,
         command::save_wallpaper,
+        command::get_config,
+        command::write_config,
+        command::set_interval,
       ])
       .run(tauri::generate_context!())
       .expect("error while running tauri application");
