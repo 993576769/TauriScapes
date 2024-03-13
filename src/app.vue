@@ -2,7 +2,10 @@
 import { onMounted } from 'vue';
 import Menu from '@/components/menu.vue';
 import AutoResize from '@/components/auto-resize.vue';
+import { useSettingsStore } from '@/stores/settings';
 
+const settingsStore = useSettingsStore();
+settingsStore.getAppConfig();
 onMounted(async () => {});
 </script>
 

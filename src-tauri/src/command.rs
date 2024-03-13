@@ -3,7 +3,13 @@ use tauri;
 use std::{fs::File, io::copy, path::PathBuf};
 use anyhow::Result;
 use wallpaper;
+use tokio::sync::{mpsc, Mutex};
 use crate::config;
+use crate::scheduler::AsyncProcessMessage;
+
+pub struct AsyncProcInputTx {
+  pub sender: Mutex<mpsc::Sender<AsyncProcessMessage>>,
+}
 
 const CACHE_DIR: &str = "tauri_scapes/cache";
 
@@ -68,7 +74,10 @@ pub async fn set_interval(interval: u64) {
 }
 
 #[tauri::command]
-pub fn write_config(data: config::AppConfig) -> config::AppConfig {
+pub async fn write_config(data: config::AppConfig, state: tauri::State<'_, AsyncProcInputTx>) -> Result<config::AppConfig, ()> {
   config::AppConfig::write_config(data.clone());
-  data
+
+  // let async_proc_input_tx = state.sender.lock().await;
+  // let _ = async_proc_input_tx.send(AsyncProcessMessage::NextImage).await;
+  Ok(data)
 }

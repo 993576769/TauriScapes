@@ -1,6 +1,7 @@
 use std::path::Path;
 use std::fs;
 use std::io::{Error, ErrorKind};
+use std::env;
 use serde::{Serialize, Deserialize};
 use tauri;
 
@@ -12,14 +13,28 @@ pub struct AppConfig {
 
 impl AppConfig {
   pub fn new() -> Self {
+    let config = Self::get_initial_config();
     Self {
-      key: "".to_string(),
+      key: config.key,
+      interval: config.interval,
+    }
+  }
+
+  pub fn get_initial_config() -> AppConfig {
+    let key = match env::var("VITE_UNSPLASH_ACCESS_KEY") {
+      Ok(key) => key,
+      Err(_) => "".to_string()
+    };
+    AppConfig {
+      key,
       interval: 1800,
     }
   }
 
   pub fn create_app_folder () -> Result<String, Error> {
     let home_dir = tauri::api::path::home_dir();
+    let folder_dir = Self::get_app_folder().unwrap();
+    let file_path = Path::new(&folder_dir).join("tauri_scapes.toml");
 
     match home_dir {
       Some(home_dir) => {
@@ -27,6 +42,8 @@ impl AppConfig {
 
         match fs::create_dir_all(app_config_dir.clone()) {
           Ok(_) => {
+            let content = toml::to_string(&Self::get_initial_config()).unwrap();
+            fs::write(file_path, content).expect("write file error");
             Ok(app_config_dir.clone().to_str().unwrap().to_string())
           },
           Err(e) => Err(e)

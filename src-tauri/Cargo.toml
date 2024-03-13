@@ -16,7 +16,7 @@ tauri-build = { version = "1.5.1", features = [] }
 [dependencies]
 serde_json = "1.0"
 chrono = "0.4.24"
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.11", features = ["json", "blocking"] }
 anyhow = "1.0.70"
 serde = { version = "1.0", features = ["derive"] }
 tauri = { version = "=1.2", features = [ "http-all", "macos-private-api", "shell-open", "system-tray"] }
@@ -26,6 +26,8 @@ tauri-plugin-positioner = { version = "=1.0.4", features = ["system-tray"] }
 wallpaper = { version = "3.2.0", features = ["from_url"] }
 image = "0.24.9"
 toml = "0.8.10"
+tokio = { version = "1.36.0", features = ["full", "time"] }
+dotenv = "0.15.0"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winapi = { version = "0.3.9", features = ["winuser"] }

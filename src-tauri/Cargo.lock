@@ -8,6 +8,7 @@ version = "0.0.1"
 dependencies = [
  "anyhow",
  "chrono",
+ "dotenv",
  "image",
  "reqwest",
  "rocket",
@@ -16,6 +17,7 @@ dependencies = [
  "tauri",
  "tauri-build",
  "tauri-plugin-positioner",
+ "tokio",
  "toml 0.8.10",
  "wallpaper",
  "winapi",
@@ -809,6 +811,12 @@ name = "dispatch"
 version = "0.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bd0c93bb4b0c6d9b77f4435b0ae98c24d17f1c45b2ff844c6151a07256ca923b"
+
+[[package]]
+name = "dotenv"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
 name = "dtoa"
@@ -4057,6 +4065,7 @@ dependencies = [
  "libc",
  "mio",
  "num_cpus",
+ "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
  "socket2",

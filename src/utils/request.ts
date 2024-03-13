@@ -3,7 +3,7 @@ import qs from 'qs';
 import type { InternalAxiosRequestConfig } from 'axios';
 import axios from 'axios';
 import axiosTauriApiAdapter from 'axios-tauri-api-adapter';
-import { useAuthStore } from '@/stores/auth';
+import { useSettingsStore } from '@/stores/settings';
 
 const request = axios.create({
   baseURL: 'https://api.unsplash.com',
@@ -18,9 +18,9 @@ const request = axios.create({
 });
 
 request.interceptors.request.use((config) => {
-  const authStore = useAuthStore();
+  const settingsStore = useSettingsStore();
   if (config.headers && !config.headers.Authorization) {
-    config.headers.Authorization = `Client-ID ${authStore.key}`;
+    config.headers.Authorization = `Client-ID ${settingsStore.config.key}`;
   }
   return config;
 });

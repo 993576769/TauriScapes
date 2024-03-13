@@ -2,7 +2,6 @@
 import { onMounted, ref } from 'vue';
 import { invoke } from '@tauri-apps/api';
 // import { listen } from '@tauri-apps/api/event';
-import { useRouter } from 'vue-router';
 import type { Image } from '@/models/image';
 import { request } from '@/utils/request';
 import Icon from '@/components/icon.vue';
@@ -13,7 +12,6 @@ onMounted(async () => {
 
 const isLoading = ref(false);
 const image = ref<Image>();
-const router = useRouter();
 async function fetch() {
   try {
     isLoading.value = true;
@@ -25,9 +23,6 @@ async function fetch() {
     image.value = data;
   } catch (err: any) {
     isLoading.value = false;
-    if (err.response.status === 401) {
-      router.push({ name: 'Settings', query: { type: '401' } });
-    }
   }
 }
 
