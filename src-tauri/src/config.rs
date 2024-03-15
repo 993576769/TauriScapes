@@ -1,7 +1,6 @@
 use std::path::Path;
 use std::fs;
 use std::io::{Error, ErrorKind};
-use std::env;
 use serde::{Serialize, Deserialize};
 use tauri;
 
@@ -21,12 +20,8 @@ impl AppConfig {
   }
 
   pub fn get_initial_config() -> AppConfig {
-    let key = match env::var("VITE_UNSPLASH_ACCESS_KEY") {
-      Ok(key) => key,
-      Err(_) => "".to_string()
-    };
     AppConfig {
-      key,
+      key: "bGqOr9yb7NN6t9ZN3pugAYyhhYL85wxM3yZFdM91hTM".to_owned(),
       interval: 0,
     }
   }
