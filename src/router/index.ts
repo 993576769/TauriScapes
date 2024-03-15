@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router';
 
 const Home = () => import('@/views/home/index.vue');
+const Settings = () => import('@/views/settings/index.vue');
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -9,7 +10,12 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Home',
     component: Home,
   },
-].filter(Boolean) as Array<RouteRecordRaw>;
+  {
+    path: '/',
+    name: 'Settings',
+    component: Settings,
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.VITE_APP_ROUTER_BASE_URL),

@@ -2,6 +2,7 @@
 const defaultTheme = require('tailwindcss/defaultTheme');
 
 module.exports = {
+  darkMode: 'selector',
   content: [
     './index.html',
     './src/**/*.{vue,js,ts,jsx,tsx}',
@@ -71,4 +72,7 @@ module.exports = {
     require('@tailwindcss/typography'),
     require('daisyui'),
   ],
+  daisyui: {
+    base: false, // applies background color and foreground color for root element by default
+  },
 };
