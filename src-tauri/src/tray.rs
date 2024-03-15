@@ -1,8 +1,8 @@
 use tauri::{CustomMenuItem, SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, AppHandle};
-use tokio::sync::mpsc;
 use tauri_plugin_positioner::{Position, WindowExt};
-use crate::scheduler::AsyncProcessMessage;
+use crate::worker::WorkerMessage;
 use tauri::Manager;
+use crate::Senders;
 
 pub fn create_tray() -> SystemTray {
   let quit: CustomMenuItem = CustomMenuItem::new("quit".to_string(), "Quit");
@@ -19,7 +19,7 @@ pub fn create_tray() -> SystemTray {
 pub fn handle_tray_event(
   app: &AppHandle,
   event: SystemTrayEvent,
-  sender: mpsc::Sender<AsyncProcessMessage>,
+  senders: Senders,
 ) {
   match event {
     SystemTrayEvent::LeftClick {
@@ -47,9 +47,9 @@ pub fn handle_tray_event(
     SystemTrayEvent::MenuItemClick { id, .. } => {
       match id.as_str() {
         "next_photo" => {
-          let tx = sender.clone();
+          let tx = senders.worker_sender.clone();
           tokio::spawn(async move {
-            tx.send(AsyncProcessMessage::NextImage).await.unwrap();
+            tx.send(WorkerMessage::NextImage).await.unwrap();
           });
         }
         "quit" => {

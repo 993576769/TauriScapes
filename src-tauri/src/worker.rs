@@ -3,16 +3,16 @@ use crate::{config, models::random::Random, http};
 use std::{fs::File, io::copy, path::PathBuf};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum AsyncProcessMessage {
+pub enum WorkerMessage {
   NextImage,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
-pub struct Scheduler {
+pub struct Worker {
   pub interval: u64,
 }
 
-impl Scheduler {
+impl Worker {
   const CACHE_DIR: &'static str = "tauri_scapes/cache";
 
   pub fn new() -> Self {

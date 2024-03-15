@@ -4,47 +4,73 @@
 )]
 mod command;
 mod config;
-mod scheduler;
+mod worker;
 mod http;
 mod tray;
 mod models;
+mod cron;
 
 use tauri::Manager;
 use tokio::sync::{mpsc, Mutex};
 use dotenv::dotenv;
-use crate::scheduler::AsyncProcessMessage;
-use crate::command::AsyncProcInputTx;
+use crate::worker::WorkerMessage;
+use tokio::time::Duration;
+
+pub struct AsyncProcInputTx {
+  pub worker_sender: Mutex<mpsc::Sender<WorkerMessage>>,
+  pub cron_sender: Mutex<mpsc::Sender<u64>>,
+}
+
+struct Senders {
+  pub worker_sender: mpsc::Sender<WorkerMessage>,
+  pub cron_sender: mpsc::Sender<u64>,
+}
 
 #[tokio::main]
-async fn main() {
-  dotenv().ok();
-  config::AppConfig::create_app_folder().expect("create app folder failed!");
+async fn init_tauri() {
+  let (async_process_input_tx, mut async_process_input_rx) = mpsc::channel::<WorkerMessage>(32);
+  let async_tx = async_process_input_tx.clone();
 
-  let (async_process_input_tx, mut async_process_input_rx) = mpsc::channel::<AsyncProcessMessage>(32);
-  let tx = async_process_input_tx.clone();
-
-  let mut scheduler: scheduler::Scheduler = scheduler::Scheduler::new();
-
-  tauri::async_runtime::spawn(async move {
+  tokio::spawn(async move {
+    let mut worker: worker::Worker = worker::Worker::new();
     loop {
       if let Some(message) = async_process_input_rx.recv().await {
         match message {
-          AsyncProcessMessage::NextImage => {
-            scheduler.next_image().await.unwrap();
+          WorkerMessage::NextImage => {
+            worker.next_image().await.unwrap();
           }
         }
       }
     }
   });
 
+  let (cron_input_tx, cron_input_rx) = mpsc::channel::<u64>(32);
+  let cron_tx = cron_input_tx.clone();
+
+  let interval = if config::AppConfig::get_config().interval > 0 {
+    Duration::from_secs(config::AppConfig::get_config().interval)
+  } else {
+    Duration::from_secs(1800)
+  };
+  let cron = cron::Cron::new(interval);
+  tokio::spawn(async move {
+    cron.clone().start(cron_input_rx).await;
+  });
+
   tauri::Builder::default()
     .manage(AsyncProcInputTx {
-      sender: Mutex::new(async_process_input_tx),
+      worker_sender: Mutex::new(async_process_input_tx),
+      cron_sender: Mutex::new(cron_input_tx),
     })
     .plugin(tauri_plugin_positioner::init())
     .system_tray(tray::create_tray())
     .on_system_tray_event(move |app, event| {
-      tray::handle_tray_event(app, event, tx.clone())
+      tray::handle_tray_event(app, event, {
+        Senders {
+          worker_sender: async_tx.clone(),
+          cron_sender: cron_tx.clone(),
+        }
+      })
     })
     .on_window_event(|event| match event.event() {
       tauri::WindowEvent::Focused(is_focused) => {
@@ -76,8 +102,14 @@ async fn main() {
       command::save_wallpaper,
       command::get_config,
       command::write_config,
-      command::set_interval,
     ])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
+}
+
+
+fn main() {
+  dotenv().ok();
+  config::AppConfig::create_app_folder().expect("create app folder failed!");
+  init_tauri();
 }
