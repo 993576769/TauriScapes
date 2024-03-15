@@ -19,7 +19,7 @@ chrono = "0.4.24"
 reqwest = { version = "0.11", features = ["json", "blocking"] }
 anyhow = "1.0.70"
 serde = { version = "1.0", features = ["derive"] }
-tauri = { version = "=1.2", features = [ "http-all", "macos-private-api", "shell-open", "system-tray"] }
+tauri = { version = "=1.6", features = [ "http-all", "macos-private-api", "shell-open", "system-tray"] }
 window-vibrancy = "=0.4.3"
 rocket = { version = "0.5.0-rc.2", features = ["json"] }
 tauri-plugin-positioner = { version = "=1.0.4", features = ["system-tray"] }
