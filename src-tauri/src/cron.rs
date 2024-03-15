@@ -19,7 +19,7 @@ impl Cron {
 
     pub async fn start(self: Arc<Self>, mut rx: mpsc::Receiver<u64>) {
       tokio::spawn(async move {
-        let mut current_interval = 1800; // 当前间隔时间（秒）
+        let mut current_interval = self.interval.lock().await.as_secs() as u64;
 
         loop {
           let interval = {
