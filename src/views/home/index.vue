@@ -5,6 +5,7 @@ import { invoke } from '@tauri-apps/api';
 import type { Image } from '@/models/image';
 import { request } from '@/utils/request';
 import Icon from '@/components/icon.vue';
+import { COMMAND } from '@/constants';
 
 onMounted(async () => {
   fetch();
@@ -35,7 +36,7 @@ const wallpapperBtnText = ref('');
 async function handleSetWallpaper() {
   isSettingWallpaper.value = true;
   try {
-    await invoke('set_wallpaper', { url: image.value?.urls?.raw, fileName: image.value?.id });
+    await invoke(COMMAND.SET_WALLPAPER, { url: image.value?.urls?.raw, fileName: image.value?.id });
     wallpapperBtnText.value = 'Set success!';
     setTimeout(() => wallpapperBtnText.value = '', 3000);
   } catch (error) {
@@ -46,7 +47,7 @@ async function handleSetWallpaper() {
 }
 
 async function handleDownload() {
-  await invoke('save_wallpaper', { url: image.value?.urls?.raw, fileName: image.value?.id });
+  await invoke(COMMAND.SAVE_WALLPAPER, { url: image.value?.urls?.raw, fileName: image.value?.id });
 }
 </script>
 

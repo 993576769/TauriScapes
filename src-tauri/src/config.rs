@@ -27,7 +27,7 @@ impl AppConfig {
     };
     AppConfig {
       key,
-      interval: 1800,
+      interval: 0,
     }
   }
 
@@ -106,30 +106,5 @@ impl AppConfig {
     };
 
     data
-  }
-
-  pub fn set_interval(&self, interval: u64) -> Self {
-    let mut data = Self::get_config();
-
-    data.interval = interval;
-
-    println!("data; {:?}", data);
-
-    Self::write_config(data.clone());
-
-    data
-  }
-
-  pub fn set_config(&self, data: AppConfig) -> Self {
-    Self::write_config(data.clone());
-
-    data
-  }
-
-  pub fn get_interval() -> u64 {
-    let data = Self::get_config();
-    println!("data: {:?}", data);
-
-    data.interval.clone()
   }
 }
