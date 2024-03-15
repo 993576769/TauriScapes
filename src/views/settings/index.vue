@@ -28,18 +28,6 @@ watch(autoStartEnabled, value => value ? enable() : disable());
 
     <label class="form-control w-full">
       <div class="label pl-0">
-        <span class="label-text">Unsplash Key</span>
-      </div>
-      <input
-        v-model="settingsStore.config.key"
-        type="text"
-        placeholder="Type here"
-        class="input input-sm input-bordered w-full"
-      />
-    </label>
-
-    <label class="form-control w-full">
-      <div class="label pl-0">
         <span class="label-text">Automatically switch wallpapers</span>
       </div>
       <input

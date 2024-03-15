@@ -12,7 +12,6 @@ mod cron;
 
 use tauri::Manager;
 use tokio::sync::{mpsc, Mutex};
-use dotenv::dotenv;
 use crate::worker::WorkerMessage;
 use tokio::time::Duration;
 use tauri_plugin_autostart::MacosLauncher;
@@ -111,7 +110,6 @@ fn init_tauri() {
 
 #[tokio::main]
 async fn main() {
-  dotenv().ok();
   config::AppConfig::create_app_folder().expect("create app folder failed!");
   init_tauri();
 }
