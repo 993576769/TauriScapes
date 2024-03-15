@@ -15,6 +15,7 @@ use tokio::sync::{mpsc, Mutex};
 use dotenv::dotenv;
 use crate::worker::WorkerMessage;
 use tokio::time::Duration;
+use tauri_plugin_autostart::MacosLauncher;
 
 pub struct AsyncProcInputTx {
   pub worker_sender: Mutex<mpsc::Sender<WorkerMessage>>,
@@ -26,8 +27,7 @@ struct Senders {
   pub cron_sender: mpsc::Sender<u64>,
 }
 
-#[tokio::main]
-async fn init_tauri() {
+fn init_tauri() {
   let (async_process_input_tx, mut async_process_input_rx) = mpsc::channel::<WorkerMessage>(32);
   let async_tx = async_process_input_tx.clone();
 
@@ -63,6 +63,7 @@ async fn init_tauri() {
       cron_sender: Mutex::new(cron_input_tx),
     })
     .plugin(tauri_plugin_positioner::init())
+    .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
     .system_tray(tray::create_tray())
     .on_system_tray_event(move |app, event| {
       tray::handle_tray_event(app, event, {
@@ -108,7 +109,8 @@ async fn init_tauri() {
 }
 
 
-fn main() {
+#[tokio::main]
+async fn main() {
   dotenv().ok();
   config::AppConfig::create_app_folder().expect("create app folder failed!");
   init_tauri();
