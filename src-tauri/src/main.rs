@@ -110,6 +110,6 @@ fn init_tauri() {
 
 #[tokio::main]
 async fn main() {
-  config::AppConfig::create_app_folder().expect("create app folder failed!");
+  config::AppConfig::get_app_folder().expect("create app folder failed!");
   init_tauri();
 }
