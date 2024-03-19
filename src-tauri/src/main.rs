@@ -88,7 +88,7 @@ fn init_tauri() {
       app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
       #[cfg(target_os = "macos")]
-      window_vibrancy::apply_vibrancy(&window, window_vibrancy::NSVisualEffectMaterial::HudWindow, None, None)
+      window_vibrancy::apply_vibrancy(&window, window_vibrancy::NSVisualEffectMaterial::HudWindow, None, Some(8.0))
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
       #[cfg(target_os = "windows")]
@@ -110,6 +110,6 @@ fn init_tauri() {
 
 #[tokio::main]
 async fn main() {
-  config::AppConfig::create_app_folder().expect("create app folder failed!");
+  config::AppConfig::get_app_folder().expect("create app folder failed!");
   init_tauri();
 }

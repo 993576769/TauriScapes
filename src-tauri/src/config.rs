@@ -1,6 +1,5 @@
 use std::path::Path;
 use std::fs;
-use std::io::{Error, ErrorKind};
 use serde::{Serialize, Deserialize};
 use tauri;
 
@@ -26,30 +25,6 @@ impl AppConfig {
     }
   }
 
-  pub fn create_app_folder () -> Result<String, Error> {
-    let home_dir = tauri::api::path::home_dir();
-    let folder_dir = Self::get_app_folder().unwrap();
-    let file_path = Path::new(&folder_dir).join("tauri_scapes.toml");
-
-    match home_dir {
-      Some(home_dir) => {
-        let app_config_dir = Path::new(&home_dir).join(".tauri_scapes");
-
-        match fs::create_dir_all(app_config_dir.clone()) {
-          Ok(_) => {
-            let content = toml::to_string(&Self::get_initial_config()).unwrap();
-            fs::write(file_path, content).expect("write file error");
-            Ok(app_config_dir.clone().to_str().unwrap().to_string())
-          },
-          Err(e) => Err(e)
-        }
-      }
-      None => {
-       Err(Error::new(ErrorKind::NotFound, "home dir is not fount"))
-      }
-    }
-  }
-
   pub fn get_app_folder() -> Result<String, (usize, String)> {
     let home_dir = tauri::api::path::home_dir();
 
@@ -60,7 +35,15 @@ impl AppConfig {
         if app_config_dir.exists() {
           Ok(app_config_dir.clone().to_str().unwrap().to_string())
         } else {
-          Ok(Self::create_app_folder().unwrap())
+          match fs::create_dir_all(app_config_dir.clone()) {
+            Ok(_) => {
+              let content = toml::to_string(&Self::get_initial_config()).unwrap();
+              let file_path = Path::new(&app_config_dir).join("tauri_scapes.toml");
+              fs::write(file_path, content).expect("write file error");
+              Ok(app_config_dir.clone().to_str().unwrap().to_string())
+            },
+            Err(e) => Err((2, e.to_string()))
+          }
         }
       }
       None => {

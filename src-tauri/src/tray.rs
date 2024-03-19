@@ -21,14 +21,13 @@ pub fn handle_tray_event(
   event: SystemTrayEvent,
   senders: Senders,
 ) {
+  tauri_plugin_positioner::on_tray_event(app, &event);
   match event {
     SystemTrayEvent::LeftClick {
       position: _,
       size: _,
       ..
     } => {
-      tauri_plugin_positioner::on_tray_event(app, &event);
-
       let window = app.get_window("main").unwrap();
 
       #[cfg(target_os = "windows")]
