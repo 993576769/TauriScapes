@@ -1,6 +1,6 @@
 import { reactive, watch } from 'vue';
 import { defineStore } from 'pinia';
-import { invoke } from '@tauri-apps/api';
+import { invoke } from '@tauri-apps/api/core';
 import { type Config, getConfig } from '@/models/config';
 import { COMMAND } from '@/constants';
 

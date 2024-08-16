@@ -1,8 +1,15 @@
 <script lang="ts" setup>
 import { onMounted } from 'vue';
-import Menu from '@/components/menu.vue';
+import { getCurrentWindow } from '@tauri-apps/api/window';
+import { TauriEvent } from '@tauri-apps/api/event';
+import Tabbar from '@/components/tabbar.vue';
 import AutoResize from '@/components/auto-resize.vue';
 import { useSettingsStore } from '@/stores/settings';
+
+getCurrentWindow().listen(TauriEvent.WINDOW_BLUR, () => {
+  // hide window
+  getCurrentWindow().hide();
+});
 
 const settingsStore = useSettingsStore();
 settingsStore.getAppConfig();
@@ -20,7 +27,7 @@ onMounted(async () => {});
         </transition>
       </router-view>
 
-      <Menu />
+      <Tabbar />
     </AutoResize>
   </main>
 </template>
