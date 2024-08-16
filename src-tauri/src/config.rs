@@ -1,7 +1,7 @@
 use std::path::Path;
 use std::fs;
 use serde::{Serialize, Deserialize};
-use tauri;
+use dirs;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct AppConfig {
@@ -26,7 +26,7 @@ impl AppConfig {
   }
 
   pub fn get_app_folder() -> Result<String, (usize, String)> {
-    let home_dir = tauri::api::path::home_dir();
+    let home_dir = dirs::home_dir();
 
     match home_dir {
       Some(home_dir) => {

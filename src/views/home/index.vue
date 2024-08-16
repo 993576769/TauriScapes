@@ -1,25 +1,25 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
-import { invoke } from '@tauri-apps/api';
-// import { listen } from '@tauri-apps/api/event';
+import { invoke } from '@tauri-apps/api/core';
 import type { Image } from '@/models/image';
-import { request } from '@/utils/request';
 import Icon from '@/components/icon.vue';
 import { COMMAND } from '@/constants';
+import { request } from '@/utils/request';
 
 onMounted(async () => {
-  fetch();
+  fetchData();
 });
 
 const isLoading = ref(false);
 const image = ref<Image>();
-async function fetch() {
+async function fetchData() {
   try {
     isLoading.value = true;
-    const { data } = await request.get<Image>('/photos/random', {
-      params: {
+    const data = await request<Image>('/photos/random', {
+      query: {
         orientation: 'landscape',
       },
+      method: 'GET',
     });
     image.value = data;
   } catch (err: any) {
@@ -63,7 +63,7 @@ async function handleDownload() {
       />
 
       <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <button class="btn btn-square bg-opacity-70 border-none select-none" @click="fetch">
+        <button class="btn btn-square bg-opacity-70 border-none select-none" @click="fetchData">
           <span v-if="isLoading" class="loading loading-spinner"></span>
           <Icon
             v-else
