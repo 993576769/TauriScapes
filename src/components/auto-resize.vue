@@ -1,13 +1,12 @@
 <script lang="ts" setup>
 import { ref, onMounted, onUnmounted } from 'vue';
-import { appWindow, LogicalSize } from '@tauri-apps/api/window';
+import { getCurrentWindow, PhysicalSize } from '@tauri-apps/api/window';
 
 const container = ref();
-function resizeWindow() {
-  appWindow.setSize(new LogicalSize(container.value.clientWidth, container.value.clientHeight));
+async function resizeWindow() {
+  getCurrentWindow().setSize(new PhysicalSize(Math.floor(container.value.clientWidth * window.devicePixelRatio), Math.floor(container.value.clientHeight * window.devicePixelRatio)));
 }
 
-// watch for container size changes
 let observer: ResizeObserver;
 onMounted(() => {
   observer = new ResizeObserver(() => {
@@ -16,7 +15,6 @@ onMounted(() => {
   observer.observe(container.value);
 });
 
-// cleanup
 onUnmounted(() => {
   observer.disconnect();
 });

@@ -5,12 +5,13 @@ use anyhow::Result;
 use wallpaper;
 use crate::config;
 use crate::AsyncProcInputTx;
+use dirs;
 
 const CACHE_DIR: &str = "tauri_scapes/cache";
 
 #[tauri::command]
 pub async fn set_wallpaper(url: &str, file_name: &str) -> Result<(), String> {
-  let cache_dir = match tauri::api::path::cache_dir() {
+  let cache_dir = match dirs::cache_dir() {
     Some(path) => path,
     None => {
       return Err("Could not find download directory".to_string())
@@ -28,7 +29,7 @@ pub async fn set_wallpaper(url: &str, file_name: &str) -> Result<(), String> {
 
 #[tauri::command]
 pub async fn save_wallpaper(url: &str, file_name: &str) -> Result<String, String> {
-  let download_dir = match tauri::api::path::download_dir() {
+  let download_dir = match dirs::download_dir() {
     Some(path) => path,
     None => {
       return Err("Could not find download directory".to_string())

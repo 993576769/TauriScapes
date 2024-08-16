@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { enable, isEnabled, disable } from '@/utils/autostart';
+import { enable, isEnabled, disable } from '@tauri-apps/plugin-autostart';
 import { useSettingsStore } from '@/stores/settings';
 
 const settingsStore = useSettingsStore();

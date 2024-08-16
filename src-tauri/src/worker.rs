@@ -1,6 +1,7 @@
 use serde::{Deserialize, Serialize};
 use crate::{config, models::random::Random, http};
 use std::{fs::File, io::copy, path::PathBuf};
+use dirs;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum WorkerMessage {
@@ -37,7 +38,7 @@ impl Worker {
   }
 
   pub async fn set_wallpaper(&mut self, url: &str, file_name: &str) -> Result<(), String> {
-    let cache_dir = match tauri::api::path::cache_dir() {
+    let cache_dir = match dirs::cache_dir() {
       Some(path) => path,
       None => {
         return Err("Could not find download directory".to_string())

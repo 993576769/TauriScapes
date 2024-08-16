@@ -6,6 +6,7 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
   const {
     TAURI_DEBUG,
+    TAURI_DEV_HOST,
   } = loadEnv(mode, process.cwd(), '');
 
   return {
@@ -13,7 +14,16 @@ export default defineConfig(({ mode }) => {
     clearScreen: false,
     // Tauri expects a fixed port, fail if that port is not available
     server: {
+      host: TAURI_DEV_HOST || false,
+      port: 3000,
       strictPort: true,
+      hmr: TAURI_DEV_HOST
+        ? {
+            protocol: 'ws',
+            host: TAURI_DEV_HOST,
+            port: 1430,
+          }
+        : undefined,
     },
     // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`,
     // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` and `TAURI_DEBUG`

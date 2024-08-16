@@ -15,6 +15,7 @@ use tokio::sync::{mpsc, Mutex};
 use crate::worker::WorkerMessage;
 use tokio::time::Duration;
 use tauri_plugin_autostart::MacosLauncher;
+use window_vibrancy::*;
 
 pub struct AsyncProcInputTx {
   pub worker_sender: Mutex<mpsc::Sender<WorkerMessage>>,
@@ -56,55 +57,54 @@ fn init_tauri() {
     cron.clone().start(cron_input_rx).await;
   });
 
-  tauri::Builder::default()
+  #[allow(unused_mut)]
+  let mut builder = tauri::Builder::default()
     .manage(AsyncProcInputTx {
       worker_sender: Mutex::new(async_process_input_tx),
       cron_sender: Mutex::new(cron_input_tx),
     })
+    .plugin(tauri_plugin_http::init())
     .plugin(tauri_plugin_positioner::init())
     .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))
-    .system_tray(tray::create_tray())
-    .on_system_tray_event(move |app, event| {
-      tray::handle_tray_event(app, event, {
-        Senders {
-          worker_sender: async_tx.clone(),
-          cron_sender: cron_tx.clone(),
-        }
-      })
-    })
-    .on_window_event(|event| match event.event() {
-      tauri::WindowEvent::Focused(is_focused) => {
-        // detect click outside of the focused window and hide the app
-        if !is_focused {
-          event.window().hide().unwrap();
-        }
+    .setup(move |app| {
+      #[cfg(all(desktop))]
+      {
+        let handle = app.handle();
+        tray::create_tray(&handle, {
+          Senders {
+            worker_sender: async_tx.clone(),
+            cron_sender: cron_tx.clone(),
+          }
+        })?;
       }
-      _ => {}
-    })
-    .setup(|app| {
-      let window = app.get_window("main").unwrap();
+
       // hide dock icon on macos
       #[cfg(target_os = "macos")]
       app.set_activation_policy(tauri::ActivationPolicy::Accessory);
 
+      let window = app.get_webview_window("main").unwrap();
+
       #[cfg(target_os = "macos")]
-      window_vibrancy::apply_vibrancy(&window, window_vibrancy::NSVisualEffectMaterial::HudWindow, None, Some(8.0))
-        .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
+      apply_vibrancy(&window, NSVisualEffectMaterial::HudWindow, None, Some(8.0))
+          .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
 
       #[cfg(target_os = "windows")]
-      window_vibrancy::apply_blur(&window, Some((18, 18, 18, 125)))
-        .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+      apply_blur(&window, Some((18, 18, 18, 125)))
+          .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
 
       Ok(())
-    })
-    .invoke_handler(tauri::generate_handler![
-      command::set_wallpaper,
-      command::save_wallpaper,
-      command::get_config,
-      command::write_config,
-    ])
-    .run(tauri::generate_context!())
-    .expect("error while running tauri application");
+    });
+
+    #[allow(unused_mut)]
+    let mut _app = builder
+      .invoke_handler(tauri::generate_handler![
+        command::set_wallpaper,
+        command::save_wallpaper,
+        command::get_config,
+        command::write_config,
+      ])
+      .run(tauri::generate_context!())
+      .expect("error while building tauri application");
 }
 
 
