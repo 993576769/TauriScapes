@@ -15,7 +15,7 @@ use tokio::sync::{mpsc, Mutex};
 use crate::worker::WorkerMessage;
 use tokio::time::Duration;
 use tauri_plugin_autostart::MacosLauncher;
-use window_vibrancy::*;
+use window_vibrancy::{apply_blur, apply_vibrancy, NSVisualEffectMaterial};
 
 pub struct AsyncProcInputTx {
   pub worker_sender: Mutex<mpsc::Sender<WorkerMessage>>,
@@ -63,6 +63,8 @@ fn init_tauri() {
       worker_sender: Mutex::new(async_process_input_tx),
       cron_sender: Mutex::new(cron_input_tx),
     })
+    .plugin(tauri_plugin_updater::Builder::new().build())
+    .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_http::init())
     .plugin(tauri_plugin_positioner::init())
     .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, None))

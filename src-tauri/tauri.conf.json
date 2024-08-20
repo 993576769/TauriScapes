@@ -38,7 +38,7 @@
         "depends": []
       }
     },
-    "createUpdaterArtifacts": false
+    "createUpdaterArtifacts": true
   },
   "productName": "TauriScapes",
   "version": "0.0.2",
@@ -65,5 +65,15 @@
       "csp": null
     },
     "macOSPrivateApi": true
+  },
+  "plugins": {
+    "updater": {
+      "active": true,
+      "endpoints": [
+        "https://gist.githubusercontent.com/993576769/451924b9d44e3fabb89108ac765fbbc3/raw/tauri_scape_latest.json"
+      ],
+      "dialog": true,
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJGRDg0OUE3NjdERTM0NjMKUldSak5ONW5wMG5ZdnpNMUp6eGxhUkZFbEpRamtSQlltS1o5OVNaSmI4UDlPRHByT0hXeEJPSXEK"
+    }
   }
 }

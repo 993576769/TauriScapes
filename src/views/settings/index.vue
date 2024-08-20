@@ -2,8 +2,10 @@
 import { onMounted, ref, watch } from 'vue';
 import { enable, isEnabled, disable } from '@tauri-apps/plugin-autostart';
 import { useSettingsStore } from '@/stores/settings';
+import { useUpdaterStore } from '@/stores/updater';
 
 const settingsStore = useSettingsStore();
+const updaterStore = useUpdaterStore();
 
 function isNumber(evt: KeyboardEvent) {
   const charCode = evt.which ? evt.which : evt.keyCode;
@@ -21,7 +23,7 @@ watch(autoStartEnabled, value => value ? enable() : disable());
 </script>
 
 <template>
-  <div class="p-3 pb-5 text-white">
+  <div class="p-3 pb-0 text-white">
     <h1>
       Preferences
     </h1>
@@ -51,5 +53,14 @@ watch(autoStartEnabled, value => value ? enable() : disable());
         />
       </label>
     </label>
+
+    <div v-if="updaterStore.canUpdate" class="w-full flex justify-end py-2">
+      <div class="indicator">
+        <span class="indicator-item size-2 rounded-full bg-error"></span>
+        <button class="btn btn-xs btn-ghost text-gray-300" @click="updaterStore.downloadAndInstall">
+          Update now
+        </button>
+      </div>
+    </div>
   </div>
 </template>

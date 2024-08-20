@@ -5,9 +5,13 @@ import { TauriEvent } from '@tauri-apps/api/event';
 import Tabbar from '@/components/tabbar.vue';
 import AutoResize from '@/components/auto-resize.vue';
 import { useSettingsStore } from '@/stores/settings';
+import { useUpdater } from '@/hooks/updater';
 
+useUpdater();
+
+// hide window
 getCurrentWindow().listen(TauriEvent.WINDOW_BLUR, () => {
-  // hide window
+  if (import.meta.env.MODE === 'development') { return; }
   getCurrentWindow().hide();
 });
 

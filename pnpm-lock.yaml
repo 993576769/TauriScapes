@@ -14,6 +14,12 @@ dependencies:
   '@tauri-apps/plugin-http':
     specifier: 2.0.0-rc.0
     version: 2.0.0-rc.0
+  '@tauri-apps/plugin-process':
+    specifier: 2.0.0-rc.0
+    version: 2.0.0-rc.0
+  '@tauri-apps/plugin-updater':
+    specifier: 2.0.0-rc.0
+    version: 2.0.0-rc.0
   '@vueuse/core':
     specifier: ^11.0.0
     version: 11.0.0(vue@3.4.38)
@@ -21,7 +27,7 @@ dependencies:
     specifier: ^0.7.0
     version: 0.7.0
   daisyui:
-    specifier: ^4.7.2
+    specifier: ^4.12.10
     version: 4.12.10(postcss@8.4.41)
   date-fns:
     specifier: ^3.3.1
@@ -908,6 +914,10 @@ packages:
     engines: {node: '>= 18.18', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
+  /@tauri-apps/api@2.0.0-rc.2:
+    resolution: {integrity: sha512-qIJJ1gKkzpPmEmIGTpja6XhuCD8A+vEh/wKaO7TzbxKiws5w3E+Kg4sBtwrH85hjMyqT0SgAUVaUk9XS7FBg3g==}
+    dev: false
+
   /@tauri-apps/cli-darwin-arm64@2.0.0-rc.3:
     resolution: {integrity: sha512-szYCSr/ChbCF+S6Wnr15TYpI2cZR07d+AQOiFGuScP0preM8Pbsk/sb0hfLwqzepjVFFNVWQba9sG7FEW2Y2XA==}
     engines: {node: '>= 10'}
@@ -1025,6 +1035,18 @@ packages:
     resolution: {integrity: sha512-XGwfQ+wmbEN9Or/jEPT9zXJSAIbopjUdZksAK7E8eIpJ+M/eQ2oFNlGm8IuzIrY3fBHIxmJZ9bZ6U2ihVewuyQ==}
     dependencies:
       '@tauri-apps/api': 2.0.0-rc.0
+    dev: false
+
+  /@tauri-apps/plugin-process@2.0.0-rc.0:
+    resolution: {integrity: sha512-Z12D/kmQzG1vCVf+jLXPhPDUA0pEjFrsg4p0uwO2sotVLM9287IuTM+aIz9cuAYOxFLKcsnDG7amSCL9IfA1gw==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-rc.2
+    dev: false
+
+  /@tauri-apps/plugin-updater@2.0.0-rc.0:
+    resolution: {integrity: sha512-EKajf/sBpFif0cwXhTo3BmNvTZ2t2DDLRyhA8FFKugZNoOeqU97bHhPT5DIqMUPRE1tyDk9o7sXm8dKf7oz+EA==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-rc.2
     dev: false
 
   /@types/cookiejar@2.1.5:
