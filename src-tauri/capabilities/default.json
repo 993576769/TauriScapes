@@ -26,6 +26,12 @@
     "autostart:allow-enable",
     "autostart:allow-is-enabled",
     "autostart:allow-disable",
+    "updater:allow-check",
+    "updater:allow-download",
+    "updater:allow-install",
+    "updater:allow-download-and-install",
+    "process:allow-exit",
+    "process:allow-restart",
     {
       "identifier": "http:default",
       "allow": [

@@ -11,7 +11,7 @@ pub fn create_tray<R: Runtime>(
   app: &tauri::AppHandle<R>,
   senders: Senders,
 ) -> tauri::Result<()> {
-  let next_photo_i = MenuItem::with_id(app, "next-photo", "New photo", true, None::<&str>)?;
+  let next_photo_i = MenuItem::with_id(app, "switch-wallpaper", "Switch wallpaper", true, None::<&str>)?;
   let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
   let menu1 = Menu::with_items(
     app,
@@ -27,7 +27,7 @@ pub fn create_tray<R: Runtime>(
     .menu(&menu1)
     .menu_on_left_click(false)
     .on_menu_event(move |app, event| match event.id.as_ref() {
-      "next-photo" => {
+      "switch-wallpaper" => {
         let tx = senders.worker_sender.clone();
         tokio::spawn(async move {
           tx.send(WorkerMessage::NextImage).await.unwrap();
