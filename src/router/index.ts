@@ -1,5 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { createRouter, createWebHistory } from 'vue-router';
+import { useSettingsStore } from '@/stores/settings';
 
 const Home = () => import('@/views/home/index.vue');
 const Settings = () => import('@/views/settings/index.vue');
@@ -27,6 +28,14 @@ const router = createRouter({
       return { top: 0 };
     }
   },
+});
+
+router.beforeEach(async (to, from, next) => {
+  const settingsStore = useSettingsStore();
+  if (!settingsStore.configLoaded) {
+    await settingsStore.getAppConfig();
+  }
+  next();
 });
 
 export default router;

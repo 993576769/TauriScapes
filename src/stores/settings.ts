@@ -7,10 +7,12 @@ import { COMMAND } from '@/constants';
 export const useSettingsStore = defineStore('settings', () => {
   const store = () => {
     const config = reactive<Config>(getConfig());
+    let configLoaded = false;
 
     async function getAppConfig() {
       const data = await invoke<Config>(COMMAND.GET_CONFIG);
       Object.assign(config, data);
+      configLoaded = true;
       return data;
     }
 
@@ -25,6 +27,7 @@ export const useSettingsStore = defineStore('settings', () => {
 
     return {
       config,
+      configLoaded,
       getAppConfig,
     };
   };

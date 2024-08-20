@@ -63,7 +63,6 @@ fn init_tauri() {
       worker_sender: Mutex::new(async_process_input_tx),
       cron_sender: Mutex::new(cron_input_tx),
     })
-    .plugin(tauri_plugin_updater::Builder::new().build())
     .plugin(tauri_plugin_process::init())
     .plugin(tauri_plugin_http::init())
     .plugin(tauri_plugin_positioner::init())
@@ -93,6 +92,8 @@ fn init_tauri() {
       #[cfg(target_os = "windows")]
       apply_blur(&window, Some((18, 18, 18, 125)))
           .expect("Unsupported platform! 'apply_blur' is only supported on Windows");
+
+      app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
 
       Ok(())
     });
