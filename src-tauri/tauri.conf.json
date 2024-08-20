@@ -41,7 +41,7 @@
     "createUpdaterArtifacts": true
   },
   "productName": "TauriScapes",
-  "version": "0.0.2",
+  "version": "./../package.json",
   "identifier": "top.lazegull.tauriscapes",
   "app": {
     "withGlobalTauri": false,
