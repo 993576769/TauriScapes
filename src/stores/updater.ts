@@ -1,24 +1,26 @@
-import { computed, ref } from 'vue';
+import { computed, reactive } from 'vue';
 import { defineStore } from 'pinia';
-import { check } from '@tauri-apps/plugin-updater';
 import type { Update } from '@tauri-apps/plugin-updater';
+import { check } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
 
 export const useUpdaterStore = defineStore('updater', () => {
   const store = () => {
-    const update = ref<Update | null>(null);
-    const canUpdate = computed(() => update.value);
+    const update = reactive<Partial<Update>>({});
+    const canUpdate = computed(() => update?.available);
 
     async function checkForUpdate() {
-      update.value = await check();
+      Object.assign(update, await check());
       return update;
     }
 
     async function downloadAndInstall() {
-      if (!update.value?.available) {
+      if (!update?.available) {
         return;
       }
-      await update.value.downloadAndInstall();
+      if (update && update.downloadAndInstall) {
+        await update.downloadAndInstall();
+      }
       relaunch();
     }
 
