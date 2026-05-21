@@ -52,23 +52,29 @@ async function handleDownload() {
 </script>
 
 <template>
-  <div class="select-none text-gray-300">
-    <div class="relative h-full">
-      <div v-show="isLoading" class="skeleton h-[250px] w-full rounded-none"></div>
+  <div class="flex min-h-0 flex-1 select-none flex-col text-gray-300">
+    <div class="group relative h-[250px] shrink-0 overflow-hidden">
+      <div v-show="isLoading" class="skeleton h-full w-full rounded-none"></div>
       <img
         v-show="!isLoading"
         :src="image?.urls?.small"
-        class="h-[250px] w-full object-cover"
+        class="h-full w-full object-cover"
         @load="onImageloaded"
       />
 
-      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-        <button class="btn btn-square bg-opacity-70 border-none select-none" @click="fetchData">
+      <div
+        class="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity duration-200 group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
+        :class="{ 'pointer-events-auto opacity-100': isLoading }"
+      >
+        <button
+          class="btn btn-square border-none bg-neutral-900/75 text-white shadow-lg"
+          @click="fetchData"
+        >
           <span v-if="isLoading" class="loading loading-spinner"></span>
           <Icon
             v-else
             name="refresh"
-            class="size-6 color-white"
+            class="size-6"
           />
         </button>
       </div>
@@ -78,7 +84,7 @@ async function handleDownload() {
       </div>
     </div>
 
-    <div class="p-3 flex flex-col gap-2">
+    <div class="flex min-h-0 flex-1 flex-col gap-3 p-4">
       <p v-if="image?.description" class="text-sm">
         {{ image.description }}
       </p>
@@ -91,13 +97,13 @@ async function handleDownload() {
         <span>Set as Wallpaper</span>
       </button>
 
-      <div class="w-full inline-flex">
-        <div v-if="image" class="text-xs">
+      <div class="flex w-full items-start gap-3">
+        <div v-if="image" class="min-w-0 flex-1 text-xs leading-5 text-gray-300">
           Photo by <a :href="image?.user?.links.html" target="_blank">{{ image?.user?.name }}</a> on <a href="https://unsplash.com/" target="_blank">Unsplash</a>
         </div>
 
-        <div class="ml-auto text-xs">
-          <p class="font-normal cursor-pointer" @click="handleDownload">
+        <div class="shrink-0 text-xs leading-5">
+          <p class="cursor-pointer font-medium text-gray-200 transition hover:text-white" @click="handleDownload">
             Download
           </p>
         </div>

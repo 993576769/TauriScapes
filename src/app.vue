@@ -18,17 +18,19 @@ onMounted(async () => {});
 </script>
 
 <template>
-  <main class="h-full">
+  <main class="h-full overflow-hidden rounded-lg bg-neutral-900/95 text-gray-200">
     <AutoResize>
-      <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <keep-alive>
-            <component :is="Component" />
-          </keep-alive>
-        </transition>
-      </router-view>
+      <div class="flex min-h-full w-[400px] flex-col overflow-hidden">
+        <router-view v-slot="{ Component }">
+          <transition name="fade" mode="out-in">
+            <keep-alive>
+              <component :is="Component" class="min-h-0 flex-1" />
+            </keep-alive>
+          </transition>
+        </router-view>
 
-      <Tabbar />
+        <Tabbar />
+      </div>
     </AutoResize>
   </main>
 </template>

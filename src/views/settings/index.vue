@@ -23,8 +23,8 @@ watch(autoStartEnabled, value => value ? enable() : disable());
 </script>
 
 <template>
-  <div class="p-3 pb-0 text-white">
-    <h1>
+  <div class="min-h-0 flex-1 p-4 text-white">
+    <h1 class="mb-3 text-lg font-semibold">
       Preferences
     </h1>
 
